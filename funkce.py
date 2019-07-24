@@ -22,27 +22,22 @@ def geom_prumer(seznam):
 
 #funkce dostane kod MKN a priradi mu "paliativni" kategorii nemoci
 def paliativni_kat(mkn):
-    pal_kat = 'bez paliativni pece'
-    if mkn.startswith('C'): 
-        pal_kat = 'rakovina'
-    if mkn.startswith('I'):
-        if int(mkn[1:]) >= 0 and int(mkn[1:]) <= 52:
-            pal_kat = 'selhani organu'
-        if int(mkn[1:]) >= 60 and int(mkn[1:]) <= 69:
-            pal_kat = 'ostatni paliativni'
-    if mkn.startswith('J'):
-        if int(mkn[1:]) >= 40 and int(mkn[1:]) <= 47:
-            pal_kat = 'selhani organu'
-    if mkn in ['J96','N17','N18','N28']:
-            pal_kat = 'selhani organu'
-    if mkn.startswith('K'):
-        if int(mkn[1:]) >= 70 and int(mkn[1:]) <= 77:
-            pal_kat = 'selhani organu'
-    if mkn in ['F01','F03','G30','R54']:
-            pal_kat = 'demence'
-    if mkn in ['G10','G12','G20','G35']:
-            pal_kat = 'ostatni paliativni'
-    if mkn.startswith('B'):
-        if int(mkn[1:]) >= 20 and int(mkn[1:]) <= 24:
-            pal_kat = 'ostatni paliativni'
-    return pal_kat
+    kat_int = [('C',0,1000,'rakovina'),
+                ('I',0,52,'selhani organu'),
+                ('I',60,69,'ostatni paliativni'),
+                ('J',40,47,'selhani organu'),
+                ('K',70,77,'selhani organu'),
+                ('B',20,24,'ostatni paliativni')]
+    for (kod, od, do, kat) in kat_int:
+        if mkn[0] == kod and od <= int(mkn[1:]) <= do:
+            return kat
+
+    kat_mkn = [(['J96','N17','N18','N28'],'selhani organu'),
+                (['F01','F03','G30','R54'],'demence'),
+                (['G10','G12','G20','G35'],'ostatni paliativni')]
+    for (kody, kat) in kat_mkn:
+        if mkn in kody:
+            return kat
+
+    return 'bez paliativni pece'
+    
